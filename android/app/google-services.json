@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "746647465437",
+    "firebase_url": "https://socialsurveys-75abd.firebaseio.com",
+    "project_id": "socialsurveys-75abd",
+    "storage_bucket": "socialsurveys-75abd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:746647465437:android:49aaa2ae1ce5b727375a34",
+        "android_client_info": {
+          "package_name": "com.example.SocialSurveys"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "746647465437-3ll8lna8phacdh2gon9qurmgf1i3hvkv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBe0p_2puUG966PoF6y0-DEAHRe-ZPTFQ8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "746647465437-3ll8lna8phacdh2gon9qurmgf1i3hvkv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
