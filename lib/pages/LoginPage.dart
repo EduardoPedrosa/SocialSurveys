@@ -116,7 +116,7 @@ class _LoginPageState extends State<LoginPage>{
             backgroundColor: Colors.transparent,
             radius: 90.0,
             child: Image(
-              image: AssetImage('assets/icons/icon.png')
+              image: AssetImage('assets/icons/survey.png')
             ),
           ),
       ),
