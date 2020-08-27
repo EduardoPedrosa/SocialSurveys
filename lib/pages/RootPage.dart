@@ -1,5 +1,5 @@
+import 'package:SocialSurveys/pages/Home.dart';
 import 'package:SocialSurveys/services/Auth.dart';
-import 'package:SocialSurveys/pages/HomePageTest.dart';
 import 'package:SocialSurveys/pages/LoginPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -28,12 +28,11 @@ class _RootPageState extends State<RootPage> {
     super.initState();
     widget.auth.getUser().then((user) {
       setState(() {
-      if (user != null) {
-        _userId = user?.uid;
-      }
-      authStatus = user?.uid == null ? 
-        AuthStatus.DESLOGADO : 
-        AuthStatus.LOGADO;
+        if (user != null) {
+          _userId = user?.uid;
+        }
+        authStatus =
+            user?.uid == null ? AuthStatus.DESLOGADO : AuthStatus.LOGADO;
       });
     });
   }
@@ -69,18 +68,11 @@ class _RootPageState extends State<RootPage> {
         return showLoadingIndicator();
         break;
       case AuthStatus.DESLOGADO:
-        return new LoginPage(
-          auth: widget.auth,
-          login: login
-        );
+        return new LoginPage(auth: widget.auth, login: login);
         break;
       case AuthStatus.LOGADO:
         if (_userId.length > 0 && _userId != null) {
-          return new MyHomePage(
-            userId: _userId,
-            auth: widget.auth,
-            logout: logout
-          );
+          return new Home(userId: _userId, auth: widget.auth, logout: logout);
         } else
           return showLoadingIndicator();
         break;

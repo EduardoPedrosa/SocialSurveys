@@ -1,3 +1,5 @@
+import 'package:SocialSurveys/pages/RootPage.dart';
+import 'package:SocialSurveys/services/Auth.dart';
 import 'package:flutter/material.dart';
 import 'package:splashscreen/splashscreen.dart' as Splash;
 
@@ -5,8 +7,8 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Splash.SplashScreen(
-      seconds: 4,
-      navigateAfterSeconds: HomePage(title: 'Calculadora'),
+      seconds: 3,
+      navigateAfterSeconds: RootPage(auth: new Auth()),
       title: Text(
         'SocialSurveys',
         style: TextStyle(
@@ -15,7 +17,7 @@ class SplashScreen extends StatelessWidget {
       image: Image(
         image: AssetImage('assets/icons/survey.png'),
       ),
-      photoSize: 100,
+      photoSize: 60,
       backgroundColor: Colors.purple[700],
       loaderColor: Colors.white,
     );

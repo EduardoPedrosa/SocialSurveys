@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/Auth.dart';
 
-class LoginPage extends StatefulWidget{
+class LoginPage extends StatefulWidget {
   final Auth auth;
   final Function login;
 
@@ -11,7 +11,7 @@ class LoginPage extends StatefulWidget{
   State<StatefulWidget> createState() => new _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage>{ 
+class _LoginPageState extends State<LoginPage> {
   final _formKey = new GlobalKey<FormState>();
 
   String email;
@@ -20,7 +20,7 @@ class _LoginPageState extends State<LoginPage>{
 
   bool isLogin; // marca se o formulário é de criar conta ou login
   bool isLoading;
-  
+
   bool validateForm() {
     final form = _formKey.currentState;
     if (form.validate()) {
@@ -109,34 +109,32 @@ class _LoginPageState extends State<LoginPage>{
 
   Widget showLogo() {
     return new Padding(
-      padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 60.0),
+      padding: const EdgeInsets.fromLTRB(0.0, 50.0, 0.0, 60.0),
       child: new Hero(
-        tag: 'lembretesIcon',
+        tag: 'SocialSurvey',
         child: CircleAvatar(
-            backgroundColor: Colors.transparent,
-            radius: 90.0,
-            child: Image(
-              image: AssetImage('assets/icons/survey.png')
-            ),
-          ),
+          backgroundColor: Colors.transparent,
+          radius: 60.0,
+          child: Image(image: AssetImage('assets/icons/survey.png')),
+        ),
       ),
     );
   }
 
   Widget showEmailField() {
     return new TextFormField(
-        maxLines: 1,
-        keyboardType: TextInputType.emailAddress,
-        autofocus: false,
-        decoration: new InputDecoration(
-            hintText: 'Email',
-            icon: new Icon(
-              Icons.mail,
-              color: Colors.grey,
-            )),
-        validator: (value) => value.isEmpty ? 'Preencha com um E-Mail' : null,
-        onSaved: (value) => email = value.trim(),
-      );
+      maxLines: 1,
+      keyboardType: TextInputType.emailAddress,
+      autofocus: false,
+      decoration: new InputDecoration(
+          hintText: 'Email',
+          icon: new Icon(
+            Icons.mail,
+            color: Colors.grey,
+          )),
+      validator: (value) => value.isEmpty ? 'Preencha com um E-Mail' : null,
+      onSaved: (value) => email = value.trim(),
+    );
   }
 
   Widget showPasswordField() {
@@ -172,9 +170,9 @@ class _LoginPageState extends State<LoginPage>{
         child: SizedBox(
           height: 40.0,
           child: new RaisedButton(
-            elevation: 5.0,
+            elevation: 1.0,
             shape: new RoundedRectangleBorder(
-                borderRadius: new BorderRadius.circular(30.0)),
+                borderRadius: new BorderRadius.circular(2.0)),
             color: Colors.purple[700],
             child: new Text(isLogin ? 'Fazer Login' : 'Criar conta',
                 style: new TextStyle(fontSize: 20.0, color: Colors.white)),
@@ -205,9 +203,9 @@ class _LoginPageState extends State<LoginPage>{
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: new AppBar(
+        appBar: new AppBar(
           centerTitle: true,
-          title: new Text('Lembretes'),
+          title: new Text('SocialSurveys'),
         ),
         body: Stack(
           children: <Widget>[
