@@ -21,6 +21,7 @@ class Survey{
     return {
       "title": title,
       "userId": userId,
+      "createdAt": Timestamp.now(),
       "isVisible": isVisible,
       "alternatives": alternatives
     };
