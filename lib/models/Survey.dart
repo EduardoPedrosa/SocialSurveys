@@ -3,24 +3,24 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Survey{
   
   String documentId;
+  String userId;
   String title;
-  String description;
   bool isVisible;
-  List<String> alternatives = []; 
+  List<String> alternatives;
   
-  Survey({this.title, this.description, this.isVisible=true});
+  Survey({this.title, this.userId, this.isVisible=true, this.alternatives});
 
   Survey.fromMap(DocumentSnapshot document){
     documentId = document.documentID;
     title = document.data["title"];
-    description = document.data["description"];
+    userId = document.data["userId"];
     alternatives = document.data["alternatives"];
   }
 
   toJson() {
     return {
       "title": title,
-      "description": description,
+      "userId": userId,
       "alternatives": alternatives
     };
   }
