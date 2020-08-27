@@ -16,6 +16,7 @@ class _LoginPageState extends State<LoginPage> {
 
   String email;
   String password;
+  String name;
   String error;
 
   bool isLogin; // marca se o formulário é de criar conta ou login
@@ -44,7 +45,7 @@ class _LoginPageState extends State<LoginPage> {
         if (isLogin) {
           userId = await widget.auth.signin(email, password);
         } else {
-          userId = await widget.auth.createUser(email, password);
+          userId = await widget.auth.createUser(name, email, password);
         }
 
         setState(() {
@@ -121,6 +122,27 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  Widget showNameField() {
+      return isLogin ? 
+        new Container(
+          height: 0.0,
+          width: 0.0,
+        ) :
+        new TextFormField(
+          maxLines: 1,
+          keyboardType: TextInputType.name,
+          autofocus: false,
+          decoration: new InputDecoration(
+              hintText: 'Nome',
+              icon: new Icon(
+                Icons.person,
+                color: Colors.grey,
+              )),
+          validator: (value) => value.isEmpty ? 'Preencha com seu nome' : null,
+          onSaved: (value) => name = value.trim(),
+        );
+  }
+
   Widget showEmailField() {
     return new TextFormField(
       maxLines: 1,
@@ -191,6 +213,7 @@ class _LoginPageState extends State<LoginPage> {
             children: <Widget>[
               showLogo(),
               showError(),
+              showNameField(),
               showEmailField(),
               showPasswordField(),
               showPrimaryButton(),
