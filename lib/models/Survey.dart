@@ -21,6 +21,7 @@ class Survey{
     return {
       "title": title,
       "userId": userId,
+      "isVisible": isVisible,
       "alternatives": alternatives
     };
   }
