@@ -1,5 +1,6 @@
 import 'package:SocialSurveys/pages/CreateSurvey.dart';
 import 'package:SocialSurveys/pages/Feed.dart';
+import 'package:SocialSurveys/pages/Profile.dart';
 import 'package:SocialSurveys/services/Auth.dart';
 import 'package:flutter/material.dart';
 
@@ -33,7 +34,8 @@ class _HomeState extends State<Home> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => CreateSurvey()),
+            MaterialPageRoute(
+                builder: (context) => CreateSurvey(userId: widget.userId)),
           );
         },
       ),
@@ -102,7 +104,7 @@ class _HomeState extends State<Home> {
                         onPressed: () {
                           setState(() {
                             currentScreen =
-                                Feed(); // if user taps on this dashboard tab will be active
+                                Profile(); // if user taps on this dashboard tab will be active
                             currentTab = 1;
                           });
                         },
