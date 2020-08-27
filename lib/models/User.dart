@@ -4,17 +4,20 @@ class User {
   
   String documentId;
   String name;
+  String email;
 
-  User({this.name});
+  User({this.name, this.email});
 
   User.fromMap(DocumentSnapshot document){
     documentId = document.documentID;
     name = document.data["name"];
+    email = document.data["email"];
   }
 
   toJson() {
     return {
-      "name": name
+      "name": name,
+      "email": email
     };
   }
 }

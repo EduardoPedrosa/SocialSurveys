@@ -5,9 +5,10 @@ class Survey{
   String documentId;
   String title;
   String description;
+  bool isVisible;
   List<String> alternatives = []; 
   
-  Survey({this.title, this.description, this.alternatives});
+  Survey({this.title, this.description, this.isVisible=true});
 
   Survey.fromMap(DocumentSnapshot document){
     documentId = document.documentID;
