@@ -21,7 +21,7 @@ class _HomeState extends State<Home> {
   int currentTab = 0; // to keep track of active tab index
   final PageStorageBucket bucket = PageStorageBucket();
   Widget currentScreen = Feed(); // Our first view in viewport
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -103,8 +103,9 @@ class _HomeState extends State<Home> {
                         minWidth: 40,
                         onPressed: () {
                           setState(() {
-                            currentScreen =
-                                Profile(); // if user taps on this dashboard tab will be active
+                            currentScreen = Profile(
+                              logout: widget.logout,
+                            );
                             currentTab = 1;
                           });
                         },

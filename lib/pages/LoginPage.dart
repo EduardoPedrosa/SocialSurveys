@@ -128,18 +128,21 @@ class _LoginPageState extends State<LoginPage> {
             height: 0.0,
             width: 0.0,
           )
-        : new TextFormField(
-            maxLines: 1,
-            autofocus: false,
-            decoration: new InputDecoration(
-                hintText: 'Nome',
-                icon: new Icon(
-                  Icons.person,
-                  color: Colors.grey,
-                )),
-            validator: (value) =>
-                value.isEmpty ? 'Preencha com seu nome' : null,
-            onSaved: (value) => name = value.trim(),
+        : Padding(
+            padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 15.0),
+            child: new TextFormField(
+              maxLines: 1,
+              autofocus: false,
+              decoration: new InputDecoration(
+                  hintText: 'Nome',
+                  icon: new Icon(
+                    Icons.person,
+                    color: Colors.grey,
+                  )),
+              validator: (value) =>
+                  value.isEmpty ? 'Preencha com seu nome' : null,
+              onSaved: (value) => name = value.trim(),
+            ),
           );
   }
 
