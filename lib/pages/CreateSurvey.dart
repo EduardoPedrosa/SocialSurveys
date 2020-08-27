@@ -1,3 +1,4 @@
+import 'package:SocialSurveys/services/SurveyService.dart';
 import 'package:flutter/material.dart';
 import 'package:toast/toast.dart';
 
@@ -21,9 +22,7 @@ class _CreateSurveyState extends State<CreateSurvey> {
   }
 
   renderAlternativesInputs() {
-    int index = 0;
-    return alternatives.map<Widget>((alternative) {
-      index++;
+    return alternatives.asMap().entries.map<Widget>((entry) {
       return Padding(
         padding: const EdgeInsets.only(top: 10.0),
         child: Row(
@@ -34,11 +33,11 @@ class _CreateSurveyState extends State<CreateSurvey> {
               width: MediaQuery.of(context).size.width * 0.75,
               child: TextField(
                 decoration: new InputDecoration(
-                  labelText: "Alternativa $index",
+                  labelText: "Alternativa ${entry.key + 1}",
                 ),
                 onChanged: (String value) {
                   setState(() {
-                    alternatives[index - 1] = value;
+                    alternatives[entry.key] = value;
                   });
                 },
               ),
@@ -52,7 +51,7 @@ class _CreateSurveyState extends State<CreateSurvey> {
                         tooltip: "Excluir alternativa",
                         onPressed: () {
                           setState(() {
-                            alternatives.removeAt(index - 1);
+                            alternatives.removeAt(entry.key);
                           });
                         },
                       ),
@@ -74,9 +73,12 @@ class _CreateSurveyState extends State<CreateSurvey> {
         hasEmpty = true;
       }
     });
-    if (hasEmpty) {
+    if (hasEmpty || title == "" || title == null) {
       Toast.show("Preencha todos os campos disponíveis", context,
-          duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+          duration: Toast.LENGTH_LONG, gravity: Toast.TOP);
+    } else {
+      SurveyService.instance.addSurvey(widget.userId, title, alternatives);
+      Navigator.pop(context);
     }
   }
 
