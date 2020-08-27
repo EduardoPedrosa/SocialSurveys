@@ -19,7 +19,7 @@ class Auth {
     );
     FirebaseUser user = result.user;
     String userId = user.uid;
-    UserService.instance.addUser(userId, email, name);
+    await UserService.instance.addUser(userId, email, name);
     return userId;
   }
 
