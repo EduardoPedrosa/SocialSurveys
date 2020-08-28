@@ -1,4 +1,6 @@
 import 'package:SocialSurveys/models/Survey.dart';
+import 'package:SocialSurveys/models/User.dart';
+import 'package:SocialSurveys/services/UserService.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 const SURVER_BY_PAGE = 5;
@@ -28,9 +30,10 @@ class SurveyService {
     }
     QuerySnapshot sp = await query.getDocuments();
     List<Survey> surveys = List<Survey>();
-    sp.documents
-        .map((doc) => Survey.fromMap(doc))
-        .forEach((survey) => surveys.add(survey));
+    for(DocumentSnapshot doc in sp.documents){
+      User user = await UserService.instance.getUser(doc["userId"]);
+      surveys.add(Survey.fromMap(doc, user));
+    }
     return surveys;
   }
 
@@ -39,7 +42,11 @@ class SurveyService {
         .where("userId", isEqualTo: userId)
         .orderBy("createdAt", descending: true)
         .getDocuments();
-    List<Survey> surveys = sp.documents.map((doc) => Survey.fromMap(doc));
+    List<Survey> surveys = List<Survey>();
+    for(DocumentSnapshot doc in sp.documents){
+      User user = await UserService.instance.getUser(doc["userId"]);
+      surveys.add(Survey.fromMap(doc, user));
+    }
     return surveys;
   }
 }

@@ -12,14 +12,14 @@ class Survey {
 
   Survey({this.title, this.userId, this.isVisible = true, this.alternatives});
 
-  Survey.fromMap(DocumentSnapshot document) {
+  Survey.fromMap(DocumentSnapshot document, User user) {
     documentId = document.documentID;
     title = document.data["title"];
     userId = document.data["userId"];
     alternatives = List<String>();
     document.data["alternatives"]
         .forEach((alternative) => alternatives.add(alternative.toString()));
-    UserService.instance.getUser(userId).then((value) => user = value);
+    this.user = user;
   }
 
   toJson() {
