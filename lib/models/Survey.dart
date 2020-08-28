@@ -1,5 +1,4 @@
 import 'package:SocialSurveys/models/User.dart';
-import 'package:SocialSurveys/services/UserService.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Survey {

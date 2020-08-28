@@ -30,7 +30,7 @@ class _SurveyItemState extends State<SurveyItem> {
                     Padding(
                       padding: const EdgeInsets.only(left: 10),
                       child: Text(
-                        "Nome da pessoa",
+                        widget.survey.user.name,
                         style: TextStyle(
                           fontSize: 17,
                           fontWeight: FontWeight.bold,

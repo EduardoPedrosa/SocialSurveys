@@ -25,8 +25,6 @@ class _FeedState extends State<Feed> {
     List<Survey> listOfSurveys =
         await SurveyService.instance.getAllSurveys(lastSurveyId);
 
-    print(listOfSurveys);
-
     setState(() {
       surveys = listOfSurveys;
     });
