@@ -4,7 +4,7 @@ import 'package:SocialSurveys/models/Survey.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ResponseService {
-  final CollectionReference _collection = Firestore.instance.collection("Surveys");
+  final CollectionReference _collection = Firestore.instance.collection("Responses");
 
   ResponseService._privateConstructor();
   static final ResponseService instance = ResponseService._privateConstructor();
