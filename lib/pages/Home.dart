@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:SocialSurveys/pages/CreateSurvey.dart';
 import 'package:SocialSurveys/pages/Feed.dart';
 import 'package:SocialSurveys/pages/Profile.dart';
@@ -36,7 +38,16 @@ class _HomeState extends State<Home> {
             context,
             MaterialPageRoute(
                 builder: (context) => CreateSurvey(userId: widget.userId)),
-          );
+          ).then((value) {
+            setState(() {
+              currentScreen = SizedBox();
+            });
+            Timer(Duration(milliseconds: 500), () {
+              setState(() {
+                currentScreen = Feed();
+              });
+            });
+          });
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
