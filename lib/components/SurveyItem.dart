@@ -1,7 +1,17 @@
 import 'package:SocialSurveys/components/Alternative.dart';
+import 'package:SocialSurveys/models/Survey.dart';
 import 'package:flutter/material.dart';
 
-class SurveyItem extends StatelessWidget {
+class SurveyItem extends StatefulWidget {
+  SurveyItem({this.survey});
+
+  final Survey survey;
+
+  @override
+  _SurveyItemState createState() => _SurveyItemState();
+}
+
+class _SurveyItemState extends State<SurveyItem> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -10,6 +20,7 @@ class SurveyItem extends StatelessWidget {
         child: Container(
             padding: EdgeInsets.all(15),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Row(
                   children: <Widget>[
@@ -32,7 +43,7 @@ class SurveyItem extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.all(20),
                   child: Text(
-                    "sdufhasdf hashdf kashdf jkasdhfkash dfjkhasdkjfhdas dfhjkasd fhjkash dfjkahsd fjhas kdfhas kjdfh askjdfh skjadfhdh dh kjashf kah kjhdfkashd fkjahsfkha skdf",
+                    widget.survey.title,
                     style: TextStyle(
                       color: Colors.black54,
                       fontSize: 16,
