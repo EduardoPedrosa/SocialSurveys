@@ -52,6 +52,7 @@ flutter:
         - asset: assets/fonts/Quicksand-Regular.ttf
   assets: 
     - assets/icons/survey.png
+    - assets/images/person.png
  
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
