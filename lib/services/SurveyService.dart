@@ -3,7 +3,7 @@ import 'package:SocialSurveys/models/User.dart';
 import 'package:SocialSurveys/services/UserService.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-const SURVER_BY_PAGE = 5;
+const SURVEY_BY_PAGE = 5;
 
 class SurveyService {
   final CollectionReference _collection =
@@ -23,7 +23,7 @@ class SurveyService {
     Query query = _collection
         .where("isVisible", isEqualTo: true)
         .orderBy("createdAt", descending: true)
-        .limit(SURVER_BY_PAGE);
+        .limit(SURVEY_BY_PAGE);
     if (lastSurveyId != null) {
       DocumentSnapshot lastDocSp =
           await _collection.document(lastSurveyId).get();
