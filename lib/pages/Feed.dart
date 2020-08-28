@@ -6,6 +6,9 @@ import 'package:loading/indicator/ball_pulse_indicator.dart';
 import 'package:loading/loading.dart';
 
 class Feed extends StatefulWidget {
+  Feed({this.userId});
+  final String userId;
+
   @override
   _FeedState createState() => _FeedState();
 }
@@ -28,7 +31,7 @@ class _FeedState extends State<Feed> {
       });
 
       List<Survey> listOfSurveys =
-          await SurveyService.instance.getAllSurveys(null);
+          await SurveyService.instance.getAllSurveys(null, widget.userId);
 
       setState(() {
         listOfSurveys.forEach((element) {
@@ -45,8 +48,8 @@ class _FeedState extends State<Feed> {
       String lastSurveyId =
           surveys.length > 0 ? surveys[surveys.length - 1].documentId : null;
 
-      List<Survey> listOfSurveys =
-          await SurveyService.instance.getAllSurveys(lastSurveyId);
+      List<Survey> listOfSurveys = await SurveyService.instance
+          .getAllSurveys(lastSurveyId, widget.userId);
 
       setState(() {
         surveys.clear();
@@ -82,6 +85,7 @@ class _FeedState extends State<Feed> {
                 ...surveys
                     .map((survey) => (SurveyItem(
                           survey: survey,
+                          userId: widget.userId,
                         )))
                     .toList(),
                 isLoading

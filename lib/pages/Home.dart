@@ -22,7 +22,14 @@ class _HomeState extends State<Home> {
 
   int currentTab = 0; // to keep track of active tab index
   final PageStorageBucket bucket = PageStorageBucket();
-  Widget currentScreen = Feed(); // Our first view in viewport
+  Widget currentScreen; // Our first view in viewport
+
+  void initState() {
+    super.initState();
+    currentScreen = Feed(
+      userId: widget.userId,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +51,9 @@ class _HomeState extends State<Home> {
             });
             Timer(Duration(milliseconds: 500), () {
               setState(() {
-                currentScreen = Feed();
+                currentScreen = Feed(
+                  userId: widget.userId,
+                );
               });
             });
           });
