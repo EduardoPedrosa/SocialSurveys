@@ -32,6 +32,7 @@ class _CreateSurveyState extends State<CreateSurvey> {
             Container(
               width: MediaQuery.of(context).size.width * 0.75,
               child: TextField(
+                maxLength: 100,
                 decoration: new InputDecoration(
                   labelText: "Alternativa ${entry.key + 1}",
                 ),
@@ -42,24 +43,22 @@ class _CreateSurveyState extends State<CreateSurvey> {
                 },
               ),
             ),
-            alternatives.length > 2
-                ? Expanded(
-                    child: Center(
-                      child: IconButton(
-                        color: Colors.red,
-                        icon: Icon(Icons.delete),
-                        tooltip: "Excluir alternativa",
-                        onPressed: () {
+            Expanded(
+              child: Center(
+                child: IconButton(
+                  color: Colors.red,
+                  icon: Icon(Icons.delete),
+                  tooltip: "Excluir alternativa",
+                  onPressed: alternatives.length > 2
+                      ? () {
                           setState(() {
                             alternatives.removeAt(entry.key);
                           });
-                        },
-                      ),
-                    ),
-                  )
-                : Expanded(
-                    child: SizedBox(),
-                  )
+                        }
+                      : null,
+                ),
+              ),
+            )
           ],
         ),
       );
@@ -122,7 +121,7 @@ class _CreateSurveyState extends State<CreateSurvey> {
                   ),
                 ),
                 ...renderAlternativesInputs(),
-                alternatives.length < 10
+                alternatives.length < 5
                     ? Container(
                         alignment: Alignment.topCenter,
                         padding: EdgeInsets.only(top: 20),
