@@ -7,18 +7,21 @@ class Survey {
   String title;
   bool isVisible;
   List<String> alternatives;
+
   User user;
+  int userAlternative;
+  List<double> percents;
 
   Survey({this.title, this.userId, this.isVisible = true, this.alternatives});
 
-  Survey.fromMap(DocumentSnapshot document, User user) {
+  Survey.fromMap(DocumentSnapshot document) {
     documentId = document.documentID;
     title = document.data["title"];
     userId = document.data["userId"];
+    isVisible = document.data["isVisible"];
     alternatives = List<String>();
     document.data["alternatives"]
         .forEach((alternative) => alternatives.add(alternative.toString()));
-    this.user = user;
   }
 
   toJson() {

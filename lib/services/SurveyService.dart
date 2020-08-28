@@ -1,5 +1,6 @@
 import 'package:SocialSurveys/models/Survey.dart';
 import 'package:SocialSurveys/models/User.dart';
+import 'package:SocialSurveys/services/ResponseService.dart';
 import 'package:SocialSurveys/services/UserService.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -19,7 +20,7 @@ class SurveyService {
     await _collection.add(survey.toJson());
   }
 
-  Future<List> getAllSurveys(String lastSurveyId) async {
+  Future<List> getAllSurveys(String lastSurveyId, String myUserId) async {
     Query query = _collection
         .where("isVisible", isEqualTo: true)
         .orderBy("createdAt", descending: true)
@@ -32,8 +33,16 @@ class SurveyService {
     QuerySnapshot sp = await query.getDocuments();
     List<Survey> surveys = List<Survey>();
     for (DocumentSnapshot doc in sp.documents) {
-      User user = await UserService.instance.getUser(doc["userId"]);
-      surveys.add(Survey.fromMap(doc, user));
+      Survey survey = Survey.fromMap(doc);
+      User user = await UserService.instance.getUser(survey.userId);
+      survey.user = user;
+      int userAlternative = await ResponseService.instance.userAlternative(myUserId, survey.documentId);
+      if(userAlternative != null){
+        List<double> percents = await ResponseService.instance.getVotesPercent(survey);
+        survey.percents = percents;
+        survey.userAlternative = userAlternative;
+      }
+      surveys.add(survey);
     }
     return surveys;
   }
@@ -45,8 +54,7 @@ class SurveyService {
         .getDocuments();
     List<Survey> surveys = List<Survey>();
     for (DocumentSnapshot doc in sp.documents) {
-      User user = await UserService.instance.getUser(doc["userId"]);
-      surveys.add(Survey.fromMap(doc, user));
+      surveys.add(Survey.fromMap(doc));
     }
     return surveys;
   }

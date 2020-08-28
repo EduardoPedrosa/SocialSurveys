@@ -19,7 +19,7 @@ class ResponseService {
     bool hasResponse = userSurveyCount > 0 ? true : false;
     hasResponse ? 
       await _collection.add(response.toJson()) : 
-      await _collection.document(userSurvey.documents[0]["documentId"]).updateData(response.toJson());
+      await _collection.document(userSurvey.documents[0].data["documentId"]).updateData(response.toJson());
     return await getVotesPercent(survey);
   }
 
@@ -42,12 +42,16 @@ class ResponseService {
     return percents;
   }
 
-  Future<bool> userHasResponse(String userId, String surveyId) async {
-    QuerySnapshot userSurvey = await _collection
+  Future<int> userAlternative(String userId, String surveyId) async {
+    QuerySnapshot userResponseSp = await _collection
       .where("userId", isEqualTo: userId)
       .where("surveyId", isEqualTo: surveyId)
       .getDocuments();
-    int userSurveyCount = userSurvey.documents.length;
-    return userSurveyCount > 0 ? true : false;
+    int userResponseCount = userResponseSp.documents.length;
+    if(userResponseCount > 0) {
+      Response userResponse = Response.fromMap(userResponseSp.documents[0]); //userSurvey query will return always a array with 1 position
+      return userResponse.alternative;
+    }
+    return null;
   }
 }
