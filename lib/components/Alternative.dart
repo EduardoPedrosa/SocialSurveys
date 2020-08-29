@@ -43,7 +43,8 @@ class _AlternativeState extends State<Alternative> {
 
   @override
   void didUpdateWidget(covariant Alternative oldWidget) {
-    if (oldWidget.userAlternative != widget.userAlternative) {
+    if (oldWidget.userAlternative != widget.userAlternative ||
+        oldWidget.percent != widget.percent) {
       verifyIfHasResponse();
     }
     super.didUpdateWidget(oldWidget);
@@ -96,17 +97,16 @@ class _AlternativeState extends State<Alternative> {
                           ),
                         ),
                         Expanded(
-                          child: Container(
-                            alignment: Alignment.centerRight,
-                            width: 30,
-                            child: FittedBox(
-                              fit: BoxFit.fitWidth,
+                          child: FittedBox(
+                            fit: BoxFit.fitWidth,
+                            child: Container(
+                              alignment: Alignment.centerRight,
+                              width: 50,
                               child: Text(
                                 hasResponse
                                     ? "${(widget.percent * 100).toInt()}%"
                                     : "",
-                                style: TextStyle(
-                                    fontSize: 17, fontWeight: FontWeight.bold),
+                                style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                             ),
                           ),

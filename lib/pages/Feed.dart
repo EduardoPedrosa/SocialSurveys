@@ -50,11 +50,8 @@ class _FeedState extends State<Feed> {
 
   Future<Null> handleRefresh() async {
     if (!isLoading) {
-      String lastSurveyId =
-          surveys.length > 0 ? surveys[surveys.length - 1].documentId : null;
-
-      List<Survey> listOfSurveys = await SurveyService.instance
-          .getAllSurveys(lastSurveyId, widget.userId);
+      List<Survey> listOfSurveys =
+          await SurveyService.instance.getAllSurveys(null, widget.userId);
 
       setState(() {
         surveys.clear();
@@ -82,29 +79,36 @@ class _FeedState extends State<Feed> {
           return false;
         },
         child: RefreshIndicator(
-          onRefresh: handleRefresh,
-          child: ListView(shrinkWrap: true, children: <Widget>[
-            ...surveys
-                .map((survey) => (SurveyItem(
-                      survey: survey,
-                      userId: widget.userId,
-                    )))
-                .toList(),
-            isLoading
-                ? Container(
-                    height: 100,
-                    alignment: Alignment.center,
-                    child: Loading(
-                        indicator: BallPulseIndicator(),
-                        size: 50.0,
-                        color: Colors.purple),
-                  )
-                : SizedBox(),
-            SizedBox(
-              height: 50,
-            ),
-          ]),
-        ),
+            onRefresh: handleRefresh,
+            child: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: surveys.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return SurveyItem(
+                          survey: surveys[index],
+                          userId: widget.userId,
+                        );
+                      }),
+                  isLoading
+                      ? Container(
+                          height: 100,
+                          alignment: Alignment.center,
+                          child: Loading(
+                              indicator: BallPulseIndicator(),
+                              size: 50.0,
+                              color: Colors.purple),
+                        )
+                      : SizedBox(),
+                  SizedBox(
+                    height: 50,
+                  ),
+                ],
+              ),
+            )),
       ),
     );
   }
