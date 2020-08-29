@@ -66,6 +66,10 @@ class SurveyService {
 
   Future<void> deleteSurvey(String surveyId) async {
     await _collection.document(surveyId).delete(); 
+    List<String> responsesIds = await ResponseService.instance.getAllSurveyResponseId(surveyId);
+    for(String responseId in responsesIds){
+      await ResponseService.instance.deleteResponse(responseId);
+    }
   }
 
 }

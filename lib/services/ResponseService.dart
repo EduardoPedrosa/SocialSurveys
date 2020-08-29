@@ -63,6 +63,17 @@ class ResponseService {
     return null;
   }
 
+  Future<List> getAllSurveyResponseId(String surveyId) async {
+    QuerySnapshot qsp = await _collection
+      .where("surveyId", isEqualTo: surveyId)
+      .getDocuments();
+    List<String> responsesIds = List<String>();
+    for(DocumentSnapshot doc in qsp.documents){
+      responsesIds.add(doc.documentID);
+    }
+    return responsesIds;
+  }
+
   Future<int> userResponsesCount(String userId) async {
     QuerySnapshot sp =
         await _collection.where("userId", isEqualTo: userId).getDocuments();
@@ -73,5 +84,9 @@ class ResponseService {
     QuerySnapshot sp =
         await _collection.where("surveyId", isEqualTo: surveyId).getDocuments();
     return sp.documents.length;
+  }
+
+  Future<void> deleteResponse(String responseId) async {
+    await _collection.document(responseId).delete(); 
   }
 }
