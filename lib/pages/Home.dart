@@ -51,9 +51,16 @@ class _HomeState extends State<Home> {
             });
             Timer(Duration(milliseconds: 500), () {
               setState(() {
-                currentScreen = Feed(
-                  userId: widget.userId,
-                );
+                if (currentTab == 0) {
+                  currentScreen = Feed(
+                    userId: widget.userId,
+                  );
+                } else if (currentTab == 1) {
+                  currentScreen = Profile(
+                    userId: widget.userId,
+                    logout: widget.logout,
+                  );
+                }
               });
             });
           });

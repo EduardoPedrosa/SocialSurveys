@@ -3,6 +3,7 @@ import 'package:SocialSurveys/models/User.dart';
 import 'package:flutter/material.dart';
 import 'package:SocialSurveys/services/SurveyService.dart';
 import 'package:SocialSurveys/services/UserService.dart';
+import 'package:SocialSurveys/services/ResponseService.dart';
 
 class SurveyComp extends StatefulWidget {
   SurveyComp({this.survey});
@@ -18,21 +19,23 @@ class _SurveyState extends State<SurveyComp> {
   void initState() {
     super.initState();
     print(widget.survey.toJson());
-    // setState(() {
-    //   visible = widget.survey.isVisible;
-    // });
+    setState(() {
+      visible = widget.survey.isVisible;
+    });
   }
 
   void handleChangeVisibility() {
-    if (visible) {
-      setState(() {
-        visible = false;
-      });
-    } else {
-      setState(() {
-        visible = true;
-      });
-    }
+    var newVisibility;
+    if (visible)
+      newVisibility = false;
+    else
+      newVisibility = true;
+    setState(() {
+      visible = newVisibility;
+    });
+    var newSurvey = widget.survey;
+    newSurvey.isVisible = newVisibility;
+    SurveyService.instance.updateSurvey(newSurvey);
   }
 
   void handleNavigateToSurvey() {}
@@ -82,6 +85,7 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   List<Survey> surveys;
   User user;
+  int numOfResponses = 0;
 
   void initState() {
     super.initState();
@@ -120,11 +124,15 @@ class _ProfileState extends State<Profile> {
 
   void fetchUser() async {
     User me = await UserService.instance.getUser(widget.userId);
+    var numOfResponses =
+        await ResponseService.instance.userResponsesCount(widget.userId);
 
     print(me.toJson());
+    print(numOfResponses);
 
     setState(() {
       user = me;
+      numOfResponses = numOfResponses;
     });
   }
 
@@ -137,9 +145,9 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     var numOfVisibles = 0;
-    // for (Survey s in surveys) {
-    //   if (s.isVisible) numOfVisibles += 1;
-    // }
+    for (Survey s in surveys) {
+      if (s.isVisible) numOfVisibles += 1;
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -246,7 +254,7 @@ class _ProfileState extends State<Profile> {
                                           BorderRadius.all(Radius.circular(3))),
                                   child: Center(
                                       child: Text(
-                                    "20",
+                                    numOfResponses.toString(),
                                     style: TextStyle(
                                         color: Colors.purple,
                                         fontSize: 37,
