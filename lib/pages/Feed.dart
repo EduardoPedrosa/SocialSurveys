@@ -50,11 +50,8 @@ class _FeedState extends State<Feed> {
 
   Future<Null> handleRefresh() async {
     if (!isLoading) {
-      String lastSurveyId =
-          surveys.length > 0 ? surveys[surveys.length - 1].documentId : null;
-
-      List<Survey> listOfSurveys = await SurveyService.instance
-          .getAllSurveys(lastSurveyId, widget.userId);
+      List<Survey> listOfSurveys =
+          await SurveyService.instance.getAllSurveys(null, widget.userId);
 
       setState(() {
         surveys.clear();
