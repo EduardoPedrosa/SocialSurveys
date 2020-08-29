@@ -36,7 +36,17 @@ class _HomeState extends State<Home> {
             context,
             MaterialPageRoute(
                 builder: (context) => CreateSurvey(userId: widget.userId)),
-          );
+          ).then((value) {
+            if (currentTab == 1) {
+              setState(() {
+                currentScreen = Profile(
+                  userId: widget.userId,
+                  logout: widget.logout,
+                );
+                currentTab = 1;
+              });
+            }
+          });
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -104,6 +114,7 @@ class _HomeState extends State<Home> {
                         onPressed: () {
                           setState(() {
                             currentScreen = Profile(
+                              userId: widget.userId,
                               logout: widget.logout,
                             );
                             currentTab = 1;
