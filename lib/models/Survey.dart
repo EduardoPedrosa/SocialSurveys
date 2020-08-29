@@ -11,7 +11,8 @@ class Survey {
   User user;
   int userAlternative;
   List<double> percents;
-
+  int responseCount;
+  
   Survey({this.title, this.userId, this.isVisible = true, this.alternatives});
 
   Survey.fromMap(DocumentSnapshot document) {
