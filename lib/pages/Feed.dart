@@ -30,8 +30,13 @@ class _FeedState extends State<Feed> {
         isLoading = true;
       });
 
-      List<Survey> listOfSurveys =
-          await SurveyService.instance.getAllSurveys(null, widget.userId);
+      String lastSurveyId;
+      if (surveys.length > 0) {
+        lastSurveyId = surveys[surveys.length - 1].documentId;
+      }
+
+      List<Survey> listOfSurveys = await SurveyService.instance
+          .getAllSurveys(lastSurveyId, widget.userId);
 
       setState(() {
         listOfSurveys.forEach((element) {
@@ -78,30 +83,25 @@ class _FeedState extends State<Feed> {
         },
         child: RefreshIndicator(
           onRefresh: handleRefresh,
-          child: ListView(children: <Widget>[
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                ...surveys
-                    .map((survey) => (SurveyItem(
-                          survey: survey,
-                          userId: widget.userId,
-                        )))
-                    .toList(),
-                isLoading
-                    ? Container(
-                        height: 100,
-                        alignment: Alignment.center,
-                        child: Loading(
-                            indicator: BallPulseIndicator(),
-                            size: 50.0,
-                            color: Colors.purple),
-                      )
-                    : SizedBox(),
-                SizedBox(
-                  height: 50,
-                )
-              ],
+          child: ListView(shrinkWrap: true, children: <Widget>[
+            ...surveys
+                .map((survey) => (SurveyItem(
+                      survey: survey,
+                      userId: widget.userId,
+                    )))
+                .toList(),
+            isLoading
+                ? Container(
+                    height: 100,
+                    alignment: Alignment.center,
+                    child: Loading(
+                        indicator: BallPulseIndicator(),
+                        size: 50.0,
+                        color: Colors.purple),
+                  )
+                : SizedBox(),
+            SizedBox(
+              height: 50,
             ),
           ]),
         ),
