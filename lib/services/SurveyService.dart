@@ -58,4 +58,13 @@ class SurveyService {
     }
     return surveys;
   }
+  
+  Future<void> updateSurvey(Survey survey) async {
+    await _collection.document(survey.documentId).updateData(survey.toJson());
+  }
+
+  Future<void> deleteSurvey(String surveyId) async {
+    await _collection.document(surveyId).delete(); 
+  }
+
 }

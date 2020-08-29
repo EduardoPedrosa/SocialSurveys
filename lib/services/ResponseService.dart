@@ -61,4 +61,19 @@ class ResponseService {
     }
     return null;
   }
+
+  Future<int> userResponsesCount(String userId) async {
+    QuerySnapshot sp = await _collection
+      .where("userId", isEqualTo: userId)
+      .getDocuments();
+    return sp.documents.length;
+  }
+
+  Future<int> surveyResponsesCount(String surveyId) async {
+    QuerySnapshot sp = await _collection
+      .where("surveyId", isEqualTo: surveyId)
+      .getDocuments();
+    return sp.documents.length;
+  }
+
 }
