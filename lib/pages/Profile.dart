@@ -215,8 +215,8 @@ class _ProfileState extends State<Profile> {
                       Container(
                         margin: EdgeInsets.only(right: 10),
                         child: SizedBox(
-                          width: 100,
-                          height: 100,
+                          width: MediaQuery.of(context).size.width * 0.25,
+                          height: MediaQuery.of(context).size.width * 0.25,
                           child: CircleAvatar(
                               backgroundImage:
                                   AssetImage('assets/images/person.png')),
@@ -245,12 +245,13 @@ class _ProfileState extends State<Profile> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Container(
-                          width: 120,
+                          width: MediaQuery.of(context).size.width * 0.25,
                           child: Column(
                             children: <Widget>[
                               SizedBox(
-                                width: 100,
-                                height: 100,
+                                width: MediaQuery.of(context).size.width * 0.25,
+                                height:
+                                    MediaQuery.of(context).size.width * 0.25,
                                 child: DecoratedBox(
                                   decoration: BoxDecoration(
                                       color: Colors.grey[200],
@@ -278,13 +279,14 @@ class _ProfileState extends State<Profile> {
                           ),
                         ),
                         Container(
-                          width: 120,
+                          width: MediaQuery.of(context).size.width * 0.25,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
                               SizedBox(
-                                width: 100,
-                                height: 100,
+                                width: MediaQuery.of(context).size.width * 0.25,
+                                height:
+                                    MediaQuery.of(context).size.width * 0.25,
                                 child: DecoratedBox(
                                   decoration: BoxDecoration(
                                       color: Colors.grey[200],
@@ -312,13 +314,14 @@ class _ProfileState extends State<Profile> {
                           ),
                         ),
                         Container(
-                          width: 120,
+                          width: MediaQuery.of(context).size.width * 0.25,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
                               SizedBox(
-                                width: 100,
-                                height: 100,
+                                width: MediaQuery.of(context).size.width * 0.25,
+                                height:
+                                    MediaQuery.of(context).size.width * 0.25,
                                 child: DecoratedBox(
                                   decoration: BoxDecoration(
                                       color: Colors.grey[200],
