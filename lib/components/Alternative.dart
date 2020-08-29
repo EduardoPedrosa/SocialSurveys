@@ -6,12 +6,14 @@ class Alternative extends StatefulWidget {
       this.index,
       this.percent,
       this.userAlternative,
-      this.addResponse});
+      this.addResponse,
+      this.changedCurrentChecked});
   final String text;
   final int index;
   final double percent;
   final int userAlternative;
   final Function(int) addResponse;
+  final Function(int) changedCurrentChecked;
 
   @override
   _AlternativeState createState() => _AlternativeState();
@@ -120,6 +122,12 @@ class _AlternativeState extends State<Alternative> {
               value: checked,
               onChanged: (value) {
                 handleCheck();
+                setState(() {
+                  if (value) {
+                    checked = true;
+                    widget.changedCurrentChecked(widget.index);
+                  }
+                });
               },
             )),
       ],
