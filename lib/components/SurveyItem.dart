@@ -22,7 +22,10 @@ class _SurveyItemState extends State<SurveyItem> {
     super.initState();
     percents = widget.survey.percents;
     userAlternative = widget.survey.userAlternative;
-    alternatives = widget.survey.alternatives;
+    alternatives = List<String>();
+    widget.survey.alternatives.forEach((element) {
+      alternatives.add(element);
+    });
   }
 
   void addResponse(int index) async {
