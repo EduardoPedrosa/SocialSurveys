@@ -6,8 +6,10 @@ import 'package:SocialSurveys/services/UserService.dart';
 import 'package:SocialSurveys/services/ResponseService.dart';
 
 class SurveyComp extends StatefulWidget {
-  SurveyComp({this.survey});
+  SurveyComp({this.survey, this.inc, this.dec});
   final Survey survey;
+  final Function inc;
+  final Function dec;
 
   @override
   _SurveyState createState() => _SurveyState();
@@ -26,10 +28,13 @@ class _SurveyState extends State<SurveyComp> {
 
   void handleChangeVisibility() {
     var newVisibility;
-    if (visible)
+    if (visible) {
       newVisibility = false;
-    else
+      widget.dec();
+    } else {
       newVisibility = true;
+      widget.inc();
+    }
     setState(() {
       visible = newVisibility;
     });
@@ -57,7 +62,8 @@ class _SurveyState extends State<SurveyComp> {
                         : Icon(Icons.visibility_off),
                     onPressed: handleChangeVisibility,
                   ),
-                  Text("30", style: TextStyle(fontSize: 20)),
+                  Text(widget.survey.responseCount.toString(),
+                      style: TextStyle(fontSize: 20)),
                 ],
               ),
               Container(
@@ -86,6 +92,7 @@ class _ProfileState extends State<Profile> {
   List<Survey> surveys;
   User user;
   int numOfResponses = 0;
+  int numOfVisibleSurveys = 0;
 
   void initState() {
     super.initState();
@@ -113,12 +120,15 @@ class _ProfileState extends State<Profile> {
     List<Survey> listOfSurveys =
         await SurveyService.instance.getUserSurveys(widget.userId);
 
-    listOfSurveys.forEach((element) {
-      print(element.toJson());
-    });
+    var numVisibleSurveys = 0;
+    for (Survey s in listOfSurveys) {
+      print(s.toJson());
+      if (s.isVisible) numVisibleSurveys++;
+    }
 
     setState(() {
       surveys = listOfSurveys;
+      numOfVisibleSurveys = numVisibleSurveys;
     });
   }
 
@@ -142,13 +152,24 @@ class _ProfileState extends State<Profile> {
     }
   }
 
+  void inc() {
+    var num = numOfVisibleSurveys;
+    num++;
+    setState(() {
+      numOfVisibleSurveys = num;
+    });
+  }
+
+  void dec() {
+    var num = numOfVisibleSurveys;
+    num--;
+    setState(() {
+      numOfVisibleSurveys = num;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    var numOfVisibles = 0;
-    for (Survey s in surveys) {
-      if (s.isVisible) numOfVisibles += 1;
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Perfil'),
@@ -288,7 +309,7 @@ class _ProfileState extends State<Profile> {
                                           BorderRadius.all(Radius.circular(3))),
                                   child: Center(
                                       child: Text(
-                                    numOfVisibles.toString(),
+                                    numOfVisibleSurveys.toString(),
                                     style: TextStyle(
                                         color: Colors.purple,
                                         fontSize: 37,
@@ -317,6 +338,8 @@ class _ProfileState extends State<Profile> {
                           itemCount: surveys.length,
                           itemBuilder: (context, index) => SurveyComp(
                                 survey: surveys[index],
+                                inc: this.inc,
+                                dec: this.dec,
                               )),
                     ),
                   ),
