@@ -16,21 +16,25 @@ class SurveyItem extends StatefulWidget {
 class _SurveyItemState extends State<SurveyItem> {
   List<double> percents;
   int userAlternative;
+  List<String> alternatives;
 
   void initState() {
     super.initState();
     percents = widget.survey.percents;
     userAlternative = widget.survey.userAlternative;
+    alternatives = widget.survey.alternatives;
   }
 
   void addResponse(int index) async {
     if (index != userAlternative) {
-      List<double> percents = await ResponseService.instance
+      List<double> pc = await ResponseService.instance
           .addResponse(widget.userId, widget.survey, index);
-      print(percents);
+
       setState(() {
-        percents = percents;
+        percents = pc;
         userAlternative = index;
+        alternatives.add("");
+        alternatives.removeLast();
       });
     }
   }
@@ -87,9 +91,19 @@ class _SurveyItemState extends State<SurveyItem> {
                 ),
                 Container(
                   padding: EdgeInsets.all(10),
-                  child: Column(
-                    children: <Widget>[...loadAlternatives()],
-                  ),
+                  child: ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: widget.survey.alternatives.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Alternative(
+                          text: widget.survey.alternatives[index],
+                          index: index,
+                          percent: percents == null ? null : percents[index],
+                          userAlternative: userAlternative,
+                          addResponse: addResponse,
+                        );
+                      }),
                 )
               ],
             )),

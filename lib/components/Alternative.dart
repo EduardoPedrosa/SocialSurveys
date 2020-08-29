@@ -23,14 +23,28 @@ class _AlternativeState extends State<Alternative> {
 
   void initState() {
     super.initState();
+    verifyIfHasResponse();
+  }
+
+  verifyIfHasResponse() {
     if (widget.percent != null && widget.userAlternative != null) {
       setState(() {
         hasResponse = true;
         if (widget.userAlternative == widget.index) {
           checked = true;
+        } else {
+          checked = false;
         }
       });
     }
+  }
+
+  @override
+  void didUpdateWidget(covariant Alternative oldWidget) {
+    if (oldWidget.userAlternative != widget.userAlternative) {
+      verifyIfHasResponse();
+    }
+    super.didUpdateWidget(oldWidget);
   }
 
   void handleCheck() {
@@ -53,7 +67,8 @@ class _AlternativeState extends State<Alternative> {
                         Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(4),
-                            color: Colors.grey[300],
+                            color:
+                                checked ? Colors.purple[100] : Colors.grey[300],
                           ),
                           width: hasResponse
                               ? MediaQuery.of(context).size.width *
@@ -80,18 +95,15 @@ class _AlternativeState extends State<Alternative> {
                         Expanded(
                           child: Container(
                             alignment: Alignment.centerRight,
+                            width: 30,
                             child: FittedBox(
                               fit: BoxFit.fitWidth,
-                              child: Container(
-                                width: 30,
-                                child: Text(
-                                  hasResponse
-                                      ? "${(widget.percent * 100).toInt()}%"
-                                      : "",
-                                  style: TextStyle(
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.bold),
-                                ),
+                              child: Text(
+                                hasResponse
+                                    ? "${(widget.percent * 100).toInt()}%"
+                                    : "",
+                                style: TextStyle(
+                                    fontSize: 17, fontWeight: FontWeight.bold),
                               ),
                             ),
                           ),
