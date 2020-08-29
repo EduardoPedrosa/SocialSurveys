@@ -39,16 +39,10 @@ class _SurveyItemState extends State<SurveyItem> {
     }
   }
 
-  List<Widget> loadAlternatives() {
-    return widget.survey.alternatives.asMap().entries.map((e) {
-      return Alternative(
-        text: e.value,
-        index: e.key,
-        percent: percents == null ? null : widget.survey.percents[e.key],
-        userAlternative: userAlternative,
-        addResponse: addResponse,
-      );
-    }).toList();
+  changeCurrentChecked(int index) {
+    setState(() {
+      userAlternative = index;
+    });
   }
 
   @override
@@ -102,6 +96,7 @@ class _SurveyItemState extends State<SurveyItem> {
                           percent: percents == null ? null : percents[index],
                           userAlternative: userAlternative,
                           addResponse: addResponse,
+                          changedCurrentChecked: changeCurrentChecked,
                         );
                       }),
                 )

@@ -124,6 +124,7 @@ class _HomeState extends State<Home> {
                         onPressed: () {
                           setState(() {
                             currentScreen = Profile(
+                              userId: widget.userId,
                               logout: widget.logout,
                             );
                             currentTab = 1;
