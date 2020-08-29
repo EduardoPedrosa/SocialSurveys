@@ -3,10 +3,15 @@ import 'package:SocialSurveys/models/User.dart';
 import 'package:flutter/material.dart';
 import 'package:SocialSurveys/services/SurveyService.dart';
 import 'package:SocialSurveys/services/UserService.dart';
+import 'package:SocialSurveys/services/ResponseService.dart';
+import 'package:SocialSurveys/pages/SurveyView.dart';
 
 class SurveyComp extends StatefulWidget {
-  SurveyComp({this.survey});
+  SurveyComp({this.survey, this.inc, this.dec, this.fetchSurveys});
   final Survey survey;
+  final Function inc;
+  final Function dec;
+  final Function fetchSurveys;
 
   @override
   _SurveyState createState() => _SurveyState();
@@ -18,54 +23,76 @@ class _SurveyState extends State<SurveyComp> {
   void initState() {
     super.initState();
     print(widget.survey.toJson());
-    // setState(() {
-    //   visible = widget.survey.isVisible;
-    // });
+    setState(() {
+      visible = widget.survey.isVisible;
+    });
   }
 
   void handleChangeVisibility() {
+    var newVisibility;
     if (visible) {
-      setState(() {
-        visible = false;
-      });
+      newVisibility = false;
+      widget.dec();
     } else {
-      setState(() {
-        visible = true;
-      });
+      newVisibility = true;
+      widget.inc();
     }
+    setState(() {
+      visible = newVisibility;
+    });
+    var newSurvey = widget.survey;
+    newSurvey.isVisible = newVisibility;
+    SurveyService.instance.updateSurvey(newSurvey);
   }
 
-  void handleNavigateToSurvey() {}
+  void handleNavigateToSurvey() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => SurveyView(
+                survey: widget.survey,
+              )),
+    ).then((value) => widget.fetchSurveys());
+  }
 
   @override
   Widget build(BuildContext context) {
     if (widget.survey == null) return Container();
-    return Card(
-      child: Container(
-          padding: EdgeInsets.all(20),
-          child: Column(
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  IconButton(
-                    icon: visible
-                        ? Icon(Icons.visibility)
-                        : Icon(Icons.visibility_off),
-                    onPressed: handleChangeVisibility,
-                  ),
-                  Text("30", style: TextStyle(fontSize: 20)),
-                ],
-              ),
-              Container(
-                margin: EdgeInsets.only(top: 10),
-                child: Text(
-                  widget.survey.title,
-                  style: TextStyle(fontSize: 20),
+    return GestureDetector(
+      onTap: handleNavigateToSurvey,
+      child: Card(
+        child: Container(
+            padding: EdgeInsets.all(20),
+            child: Column(
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    IconButton(
+                      icon: visible
+                          ? Icon(
+                              Icons.visibility,
+                              color: Colors.black54,
+                            )
+                          : Icon(Icons.visibility_off, color: Colors.black54),
+                      onPressed: handleChangeVisibility,
+                    ),
+                    Text(
+                        "Nº respostas: " +
+                            widget.survey.responseCount.toString(),
+                        style: TextStyle(fontSize: 20)),
+                  ],
                 ),
-              )
-            ],
-          )),
+                Container(
+                  margin: EdgeInsets.only(top: 10),
+                  child: Text(
+                    widget.survey.title,
+                    style: TextStyle(fontSize: 20),
+                  ),
+                )
+              ],
+            )),
+      ),
     );
   }
 }
@@ -82,6 +109,8 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   List<Survey> surveys;
   User user;
+  int numOfResponses = 0;
+  int numOfVisibleSurveys = 0;
 
   void initState() {
     super.initState();
@@ -109,22 +138,28 @@ class _ProfileState extends State<Profile> {
     List<Survey> listOfSurveys =
         await SurveyService.instance.getUserSurveys(widget.userId);
 
-    listOfSurveys.forEach((element) {
-      print(element.toJson());
-    });
+    var numVisibleSurveys = 0;
+    for (Survey s in listOfSurveys) {
+      print(s.toJson());
+      if (s.isVisible) numVisibleSurveys++;
+    }
 
     setState(() {
       surveys = listOfSurveys;
+      numOfVisibleSurveys = numVisibleSurveys;
     });
   }
 
   void fetchUser() async {
     User me = await UserService.instance.getUser(widget.userId);
+    var num = await ResponseService.instance.userResponsesCount(widget.userId);
 
     print(me.toJson());
+    print(num);
 
     setState(() {
       user = me;
+      numOfResponses = num;
     });
   }
 
@@ -134,13 +169,24 @@ class _ProfileState extends State<Profile> {
     }
   }
 
+  void inc() {
+    var num = numOfVisibleSurveys;
+    num++;
+    setState(() {
+      numOfVisibleSurveys = num;
+    });
+  }
+
+  void dec() {
+    var num = numOfVisibleSurveys;
+    num--;
+    setState(() {
+      numOfVisibleSurveys = num;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    var numOfVisibles = 0;
-    // for (Survey s in surveys) {
-    //   if (s.isVisible) numOfVisibles += 1;
-    // }
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Perfil'),
@@ -246,7 +292,7 @@ class _ProfileState extends State<Profile> {
                                           BorderRadius.all(Radius.circular(3))),
                                   child: Center(
                                       child: Text(
-                                    "20",
+                                    numOfResponses.toString(),
                                     style: TextStyle(
                                         color: Colors.purple,
                                         fontSize: 37,
@@ -280,7 +326,7 @@ class _ProfileState extends State<Profile> {
                                           BorderRadius.all(Radius.circular(3))),
                                   child: Center(
                                       child: Text(
-                                    numOfVisibles.toString(),
+                                    numOfVisibleSurveys.toString(),
                                     style: TextStyle(
                                         color: Colors.purple,
                                         fontSize: 37,
@@ -309,6 +355,9 @@ class _ProfileState extends State<Profile> {
                           itemCount: surveys.length,
                           itemBuilder: (context, index) => SurveyComp(
                                 survey: surveys[index],
+                                inc: this.inc,
+                                dec: this.dec,
+                                fetchSurveys: this.fetchSurveys,
                               )),
                     ),
                   ),

@@ -51,9 +51,16 @@ class _HomeState extends State<Home> {
             });
             Timer(Duration(milliseconds: 500), () {
               setState(() {
-                currentScreen = Feed(
-                  userId: widget.userId,
-                );
+                if (currentTab == 0) {
+                  currentScreen = Feed(
+                    userId: widget.userId,
+                  );
+                } else if (currentTab == 1) {
+                  currentScreen = Profile(
+                    userId: widget.userId,
+                    logout: widget.logout,
+                  );
+                }
               });
             });
           });
@@ -80,8 +87,9 @@ class _HomeState extends State<Home> {
                         minWidth: 40,
                         onPressed: () {
                           setState(() {
-                            currentScreen =
-                                Feed(); // if user taps on this dashboard tab will be active
+                            currentScreen = Feed(
+                              userId: widget.userId,
+                            );
                             currentTab = 0;
                           });
                         },

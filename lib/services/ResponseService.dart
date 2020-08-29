@@ -42,7 +42,8 @@ class ResponseService {
     });
     List<double> percents = new List<double>();
     for (int responseCount in responsesCount) {
-      double percent = (responseCount / responses.length);
+      double percent =
+          responses.length == 0 ? 0 : (responseCount / responses.length);
       percents.add(percent);
     }
     return percents;
@@ -63,17 +64,14 @@ class ResponseService {
   }
 
   Future<int> userResponsesCount(String userId) async {
-    QuerySnapshot sp = await _collection
-      .where("userId", isEqualTo: userId)
-      .getDocuments();
+    QuerySnapshot sp =
+        await _collection.where("userId", isEqualTo: userId).getDocuments();
     return sp.documents.length;
   }
 
   Future<int> surveyResponseCount(String surveyId) async {
-    QuerySnapshot sp = await _collection
-      .where("surveyId", isEqualTo: surveyId)
-      .getDocuments();
+    QuerySnapshot sp =
+        await _collection.where("surveyId", isEqualTo: surveyId).getDocuments();
     return sp.documents.length;
   }
-
 }
