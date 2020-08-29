@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:SocialSurveys/services/SurveyService.dart';
 import 'package:SocialSurveys/services/UserService.dart';
 import 'package:SocialSurveys/services/ResponseService.dart';
+import 'package:SocialSurveys/pages/SurveyView.dart';
 
 class SurveyComp extends StatefulWidget {
-  SurveyComp({this.survey, this.inc, this.dec});
+  SurveyComp({this.survey, this.inc, this.dec, this.fetchSurveys});
   final Survey survey;
   final Function inc;
   final Function dec;
+  final Function fetchSurveys;
 
   @override
   _SurveyState createState() => _SurveyState();
@@ -43,38 +45,54 @@ class _SurveyState extends State<SurveyComp> {
     SurveyService.instance.updateSurvey(newSurvey);
   }
 
-  void handleNavigateToSurvey() {}
+  void handleNavigateToSurvey() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => SurveyView(
+                survey: widget.survey,
+              )),
+    ).then((value) => widget.fetchSurveys());
+  }
 
   @override
   Widget build(BuildContext context) {
     if (widget.survey == null) return Container();
-    return Card(
-      child: Container(
-          padding: EdgeInsets.all(20),
-          child: Column(
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  IconButton(
-                    icon: visible
-                        ? Icon(Icons.visibility)
-                        : Icon(Icons.visibility_off),
-                    onPressed: handleChangeVisibility,
-                  ),
-                  Text(widget.survey.responseCount.toString(),
-                      style: TextStyle(fontSize: 20)),
-                ],
-              ),
-              Container(
-                margin: EdgeInsets.only(top: 10),
-                child: Text(
-                  widget.survey.title,
-                  style: TextStyle(fontSize: 20),
+    return GestureDetector(
+      onTap: handleNavigateToSurvey,
+      child: Card(
+        child: Container(
+            padding: EdgeInsets.all(20),
+            child: Column(
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    IconButton(
+                      icon: visible
+                          ? Icon(
+                              Icons.visibility,
+                              color: Colors.black54,
+                            )
+                          : Icon(Icons.visibility_off, color: Colors.black54),
+                      onPressed: handleChangeVisibility,
+                    ),
+                    Text(
+                        "Nº respostas: " +
+                            widget.survey.responseCount.toString(),
+                        style: TextStyle(fontSize: 20)),
+                  ],
                 ),
-              )
-            ],
-          )),
+                Container(
+                  margin: EdgeInsets.only(top: 10),
+                  child: Text(
+                    widget.survey.title,
+                    style: TextStyle(fontSize: 20),
+                  ),
+                )
+              ],
+            )),
+      ),
     );
   }
 }
@@ -134,15 +152,14 @@ class _ProfileState extends State<Profile> {
 
   void fetchUser() async {
     User me = await UserService.instance.getUser(widget.userId);
-    var numOfResponses =
-        await ResponseService.instance.userResponsesCount(widget.userId);
+    var num = await ResponseService.instance.userResponsesCount(widget.userId);
 
     print(me.toJson());
-    print(numOfResponses);
+    print(num);
 
     setState(() {
       user = me;
-      numOfResponses = numOfResponses;
+      numOfResponses = num;
     });
   }
 
@@ -340,6 +357,7 @@ class _ProfileState extends State<Profile> {
                                 survey: surveys[index],
                                 inc: this.inc,
                                 dec: this.dec,
+                                fetchSurveys: this.fetchSurveys,
                               )),
                     ),
                   ),

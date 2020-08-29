@@ -85,7 +85,7 @@ class _CreateSurveyState extends State<CreateSurvey> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Criar Questionário'),
+        title: Text('Criar Enquete'),
       ),
       body: GestureDetector(
         onTap: () {

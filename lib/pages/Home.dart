@@ -87,8 +87,9 @@ class _HomeState extends State<Home> {
                         minWidth: 40,
                         onPressed: () {
                           setState(() {
-                            currentScreen =
-                                Feed(); // if user taps on this dashboard tab will be active
+                            currentScreen = Feed(
+                              userId: widget.userId,
+                            );
                             currentTab = 0;
                           });
                         },
