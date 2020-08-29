@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:SocialSurveys/pages/CreateSurvey.dart';
 import 'package:SocialSurveys/pages/Feed.dart';
 import 'package:SocialSurveys/pages/Profile.dart';
@@ -20,7 +22,14 @@ class _HomeState extends State<Home> {
 
   int currentTab = 0; // to keep track of active tab index
   final PageStorageBucket bucket = PageStorageBucket();
-  Widget currentScreen = Feed(); // Our first view in viewport
+  Widget currentScreen; // Our first view in viewport
+
+  void initState() {
+    super.initState();
+    currentScreen = Feed(
+      userId: widget.userId,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,15 +46,16 @@ class _HomeState extends State<Home> {
             MaterialPageRoute(
                 builder: (context) => CreateSurvey(userId: widget.userId)),
           ).then((value) {
-            if (currentTab == 1) {
+            setState(() {
+              currentScreen = SizedBox();
+            });
+            Timer(Duration(milliseconds: 500), () {
               setState(() {
-                currentScreen = Profile(
+                currentScreen = Feed(
                   userId: widget.userId,
-                  logout: widget.logout,
                 );
-                currentTab = 1;
               });
-            }
+            });
           });
         },
       ),

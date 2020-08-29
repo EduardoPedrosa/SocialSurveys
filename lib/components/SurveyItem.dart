@@ -1,10 +1,12 @@
 import 'package:SocialSurveys/components/Alternative.dart';
 import 'package:SocialSurveys/models/Survey.dart';
+import 'package:SocialSurveys/services/ResponseService.dart';
 import 'package:flutter/material.dart';
 
 class SurveyItem extends StatefulWidget {
-  SurveyItem({this.survey});
+  SurveyItem({this.survey, this.userId});
 
+  final String userId;
   final Survey survey;
 
   @override
@@ -12,6 +14,43 @@ class SurveyItem extends StatefulWidget {
 }
 
 class _SurveyItemState extends State<SurveyItem> {
+  List<double> percents;
+  int userAlternative;
+  List<String> alternatives;
+
+  void initState() {
+    super.initState();
+    percents = widget.survey.percents;
+    userAlternative = widget.survey.userAlternative;
+    alternatives = widget.survey.alternatives;
+  }
+
+  void addResponse(int index) async {
+    if (index != userAlternative) {
+      List<double> pc = await ResponseService.instance
+          .addResponse(widget.userId, widget.survey, index);
+
+      setState(() {
+        percents = pc;
+        userAlternative = index;
+        alternatives.add("");
+        alternatives.removeLast();
+      });
+    }
+  }
+
+  List<Widget> loadAlternatives() {
+    return widget.survey.alternatives.asMap().entries.map((e) {
+      return Alternative(
+        text: e.value,
+        index: e.key,
+        percent: percents == null ? null : widget.survey.percents[e.key],
+        userAlternative: userAlternative,
+        addResponse: addResponse,
+      );
+    }).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -52,12 +91,19 @@ class _SurveyItemState extends State<SurveyItem> {
                 ),
                 Container(
                   padding: EdgeInsets.all(10),
-                  child: Column(
-                    children: <Widget>[
-                      Alternative(),
-                      Alternative(),
-                    ],
-                  ),
+                  child: ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: widget.survey.alternatives.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Alternative(
+                          text: widget.survey.alternatives[index],
+                          index: index,
+                          percent: percents == null ? null : percents[index],
+                          userAlternative: userAlternative,
+                          addResponse: addResponse,
+                        );
+                      }),
                 )
               ],
             )),

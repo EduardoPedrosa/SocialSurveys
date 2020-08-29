@@ -2,14 +2,20 @@ import 'package:SocialSurveys/components/SurveyItem.dart';
 import 'package:SocialSurveys/models/Survey.dart';
 import 'package:SocialSurveys/services/SurveyService.dart';
 import 'package:flutter/material.dart';
+import 'package:loading/indicator/ball_pulse_indicator.dart';
+import 'package:loading/loading.dart';
 
 class Feed extends StatefulWidget {
+  Feed({this.userId});
+  final String userId;
+
   @override
   _FeedState createState() => _FeedState();
 }
 
 class _FeedState extends State<Feed> {
   List<Survey> surveys;
+  bool isLoading = false;
 
   void initState() {
     super.initState();
@@ -18,16 +24,42 @@ class _FeedState extends State<Feed> {
     fetchSurveys();
   }
 
-  void fetchSurveys() async {
-    String lastSurveyId =
-        surveys.length > 0 ? surveys[surveys.length - 1].documentId : null;
+  Future<void> fetchSurveys() async {
+    if (!isLoading) {
+      setState(() {
+        isLoading = true;
+      });
 
-    List<Survey> listOfSurveys =
-        await SurveyService.instance.getAllSurveys(lastSurveyId);
+      List<Survey> listOfSurveys =
+          await SurveyService.instance.getAllSurveys(null, widget.userId);
 
-    setState(() {
-      surveys = listOfSurveys;
-    });
+      setState(() {
+        listOfSurveys.forEach((element) {
+          surveys.add(element);
+        });
+
+        isLoading = false;
+      });
+    }
+  }
+
+  Future<Null> handleRefresh() async {
+    if (!isLoading) {
+      String lastSurveyId =
+          surveys.length > 0 ? surveys[surveys.length - 1].documentId : null;
+
+      List<Survey> listOfSurveys = await SurveyService.instance
+          .getAllSurveys(lastSurveyId, widget.userId);
+
+      setState(() {
+        surveys.clear();
+        listOfSurveys.forEach((element) {
+          surveys.add(element);
+        });
+      });
+    }
+
+    return null;
   }
 
   @override
@@ -36,21 +68,44 @@ class _FeedState extends State<Feed> {
       appBar: AppBar(
         title: Text('SocialSurveys'),
       ),
-      body: ListView(children: <Widget>[
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            ...surveys
-                .map((survey) => (SurveyItem(
-                      survey: survey,
-                    )))
-                .toList(),
-            SizedBox(
-              height: 50,
-            )
-          ],
+      body: NotificationListener<ScrollNotification>(
+        onNotification: (ScrollNotification scrollInfo) {
+          if (scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent) {
+            fetchSurveys();
+            return true;
+          }
+          return false;
+        },
+        child: RefreshIndicator(
+          onRefresh: handleRefresh,
+          child: ListView(children: <Widget>[
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                ...surveys
+                    .map((survey) => (SurveyItem(
+                          survey: survey,
+                          userId: widget.userId,
+                        )))
+                    .toList(),
+                isLoading
+                    ? Container(
+                        height: 100,
+                        alignment: Alignment.center,
+                        child: Loading(
+                            indicator: BallPulseIndicator(),
+                            size: 50.0,
+                            color: Colors.purple),
+                      )
+                    : SizedBox(),
+                SizedBox(
+                  height: 50,
+                )
+              ],
+            ),
+          ]),
         ),
-      ]),
+      ),
     );
   }
 }
