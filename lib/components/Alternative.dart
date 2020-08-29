@@ -66,7 +66,8 @@ class _AlternativeState extends State<Alternative> {
                   Positioned.fill(
                     child: Row(
                       children: <Widget>[
-                        Container(
+                        AnimatedContainer(
+                          duration: Duration(milliseconds: 500),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(4),
                             color:
