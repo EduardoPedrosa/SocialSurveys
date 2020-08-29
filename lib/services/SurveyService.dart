@@ -23,14 +23,13 @@ class SurveyService {
   Future<List> getAllSurveys(String lastSurveyId, String myUserId) async {
     Query query = _collection
         .where("isVisible", isEqualTo: true)
-        .orderBy("createdAt", descending: true)
-        .limit(SURVEY_BY_PAGE);
+        .orderBy("createdAt", descending: true);
     if (lastSurveyId != null) {
       DocumentSnapshot lastDocSp =
           await _collection.document(lastSurveyId).get();
       query = query.startAfterDocument(lastDocSp);
     }
-    QuerySnapshot sp = await query.getDocuments();
+    QuerySnapshot sp = await query.limit(SURVEY_BY_PAGE).getDocuments();
     List<Survey> surveys = List<Survey>();
     for (DocumentSnapshot doc in sp.documents) {
       Survey survey = Survey.fromMap(doc);
@@ -54,11 +53,13 @@ class SurveyService {
         .getDocuments();
     List<Survey> surveys = List<Survey>();
     for (DocumentSnapshot doc in sp.documents) {
-      surveys.add(Survey.fromMap(doc));
+      Survey survey = Survey.fromMap(doc);
+      survey.responseCount = await ResponseService.instance.surveyResponseCount(survey.documentId);
+      surveys.add(survey);
     }
     return surveys;
   }
-  
+
   Future<void> updateSurvey(Survey survey) async {
     await _collection.document(survey.documentId).updateData(survey.toJson());
   }

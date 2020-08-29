@@ -69,7 +69,7 @@ class ResponseService {
     return sp.documents.length;
   }
 
-  Future<int> surveyResponsesCount(String surveyId) async {
+  Future<int> surveyResponseCount(String surveyId) async {
     QuerySnapshot sp = await _collection
       .where("surveyId", isEqualTo: surveyId)
       .getDocuments();
